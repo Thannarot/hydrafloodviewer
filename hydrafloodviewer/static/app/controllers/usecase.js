@@ -62,18 +62,10 @@
 			_addElement: function () {
 				var elements = this._container.getElementsByClassName('leaflet-control-layers-list');
 				var div = L.DomUtil.create('div', '', elements[0]);
-				div.innerHTML = `
-				<div class="leaflet-control-layers leaflet-control-layers-expanded">
-				<input class="leaflet-control-layers-overlays" name="basemap_selection" id="street" checked="checked" value="street" type="radio">
-				Streets
-				</input>
-				<input class="leaflet-control-layers-overlays" name="basemap_selection" id="satellite" value="satellite" type="radio">
-				Satellite
-				</input>
-				<input class="leaflet-control-layers-overlays" name="basemap_selection" id="terrain" value="terrain" type="radio">
-				Terrain
-				</input>
-				</div>`;
+				div.innerHTML = '<div class="leaflet-control-layers leaflet-control-layers-expanded">'+
+				'<input class="leaflet-control-layers-overlays" name="basemap_selection" id="street" checked="checked" value="street" type="radio">Streets</input>'+
+				'<input class="leaflet-control-layers-overlays" name="basemap_selection" id="satellite" value="satellite" type="radio">Satellite</input>'+
+				'<input class="leaflet-control-layers-overlays" name="basemap_selection" id="terrain" value="terrain" type="radio">Terrain</input></div>';
 			}
 		});
 
@@ -123,7 +115,7 @@
 			updatePermanentWater();
 			editableLayers.addLayer(layer);
 		});
-		map.on('draw:edited', (e) => {
+		map.on('draw:edited', function(e) {
 			var editedlayers = e.layers;
 			editedlayers.eachLayer(function(layer) {
 				var userPolygon = layer.toGeoJSON();
@@ -134,7 +126,7 @@
 
 			});
 		});
-		map.on('draw:deleted', (e) => {
+		map.on('draw:deleted', function(e) {
 			var userPolygon = '';
 			drawing_polygon = '';
 		});

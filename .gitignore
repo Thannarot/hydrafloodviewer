@@ -16,9 +16,6 @@ hydrafloodviewer/settings.py
 
 # Unused templates
 # ======================
-hydrafloodviewer/templates/home_.html
-hydrafloodviewer/templates/panels/graph.html
-hydrafloodviewer/templates/panels/map-view.html
 
 
 # Vendor files

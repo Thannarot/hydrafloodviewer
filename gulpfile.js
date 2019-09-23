@@ -6,6 +6,8 @@
 var _ = require('lodash'),
 	assets = require('./assets'),
 	gulp = require('gulp'),
+	uglify = require('gulp-uglify'),
+	cssmin = require('gulp-cssmin'),
 	gulpLoadPlugins = require('gulp-load-plugins'),
 	runSequence = require('run-sequence'),
 	plugins = gulpLoadPlugins({
@@ -49,7 +51,9 @@ gulp.task('uglify', function () {
 
 	return gulp.src(_assets)
 		.pipe(plugins.ngAnnotate())
-		.pipe(plugins.uglify())
+		.pipe(plugins.uglify().on('error', function(err) {
+	        console.log(err);
+	    }))
 		.pipe(plugins.concat('application.min.js'))
 		.pipe(gulp.dest('./hydrafloodviewer/static/dist/'));
 });
@@ -57,7 +61,9 @@ gulp.task('uglify', function () {
 // CSS minifying task
 gulp.task('cssmin', function () {
 	return gulp.src(assets.client.css)
-		.pipe(plugins.cssmin())
+		.pipe(plugins.cssmin().on('error', function(err) {
+	        console.log(err);
+	    }))
 		.pipe(plugins.concat('application.min.css'))
 		.pipe(gulp.dest('./hydrafloodviewer/static/dist/'));
 });
