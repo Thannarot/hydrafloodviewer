@@ -3,11 +3,7 @@
 module.exports = {
     client: {
         css: [
-            'hydrafloodviewer/static/css/main.css',
-            'hydrafloodviewer/static/css/home.css',
-            'hydrafloodviewer/static/css/footer.css',
-            'hydrafloodviewer/static/css/navigation.css',
-            'hydrafloodviewer/static/css/usecase.css',
+            'hydrafloodviewer/static/css/*.css',
         ],
         js: [
             'hydrafloodviewer/static/app/*.js',

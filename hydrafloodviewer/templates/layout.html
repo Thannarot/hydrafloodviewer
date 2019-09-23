@@ -41,17 +41,11 @@
 
 
 		<!-- Load CSS -->
-		{% if debug %}
 		<!-- Custom CSS -->
-
 		<link href="{% static 'css/main.css' %}" rel="stylesheet">
 		<link href="{% static 'css/map.css' %}" rel="stylesheet">
 		<link href="{% static 'css/navigation.css' %}" rel="stylesheet">
 		<link href="{% static 'css/footer.css' %}" rel="stylesheet">
-		{% else %}
-		<link href="{% static 'dist/application.min.css' %}" rel="stylesheet">
-		<link href="{% static 'dist/mapviewer.min.css' %}" rel="stylesheet">
-		{% endif %}
 		<!-- Normalize CSS -->
 		<link href="{% static 'vendor/normalize-css/normalize.css' %}" rel="stylesheet">
 		<!-- ng-Dialog -->

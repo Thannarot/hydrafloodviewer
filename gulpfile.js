@@ -67,24 +67,6 @@ gulp.task('cssmin', function () {
 		.pipe(plugins.concat('application.min.css'))
 		.pipe(gulp.dest('./hydrafloodviewer/static/dist/'));
 });
-// CSS minifying task
-gulp.task('cssminmap', function () {
-	return gulp.src('hydrafloodviewer/static/css/map.css')
-		.pipe(plugins.cssmin().on('error', function(err) {
-	        console.log(err);
-	    }))
-		.pipe(plugins.concat('mapviewer.min.css'))
-		.pipe(gulp.dest('./hydrafloodviewer/static/dist/'));
-});
-// CSS minifying task
-gulp.task('cssminusecaseviewer', function () {
-	return gulp.src('hydrafloodviewer/static/css/usecase-viewer.css')
-		.pipe(plugins.cssmin().on('error', function(err) {
-	        console.log(err);
-	    }))
-		.pipe(plugins.concat('usecaseviewer.min.css'))
-		.pipe(gulp.dest('./hydrafloodviewer/static/dist/'));
-});
 
 // Lint CSS and JavaScript files.
 gulp.task('lint', function (done) {
@@ -96,5 +78,5 @@ gulp.task('lint', function (done) {
 
 // Lint project files and minify them into two production files.
 gulp.task('build', function (done) {
-	runSequence('lint', ['uglify', 'cssmin', 'cssminmap', 'cssminusecaseviewer'], done);
+	runSequence('lint', ['uglify', 'cssmin'], done);
 });
