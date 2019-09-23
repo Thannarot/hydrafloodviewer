@@ -27,7 +27,7 @@
 	app.config(['$translateProvider', function($translateProvider) {
 		$translateProvider
 		.useStaticFilesLoader({
-			prefix: 'static/locales/local-',
+			prefix: '/static/locales/local-',
 			suffix: '.json'
 		})
 		// remove the warning from console log by putting the sanitize strategy
@@ -37,8 +37,6 @@
 	}]);
 	app.run(['$rootScope', function($rootScope) {
 		$rootScope.lang = 'en';
-	}])
-	//CMS.$(document).on('cms-ready', function () {
-	//	$(body).css({'margin-top': '100px'});
-	//});
+	}]);
+
 })();
