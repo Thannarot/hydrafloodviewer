@@ -40,19 +40,9 @@
 		var floodSlider = $('#flood-opacity').slider();
 		var floodSlider1 = $('#flood1-opacity').slider();
 
-
-		// check if this init is a load from the use case redirects
-		// only need to change map center for one use case (only works on production server)
-		if (window.location.href == 'http://tethys-servir.adpc.net/apps/hydraviewer/mapviewer/?sDate=2016-07-14&sensor_txt=sentinel1')  {
-			var centerPt = [21,94]
-		}
-		else{
-			centerPt = [16.8,95.7]
-		}
-
 		// init map
 		map = L.map('map',{
-			center: centerPt,
+			center: [16.8,95.7],
 			zoom: 8,
 			minZoom:2,
 			maxZoom: 16,
@@ -150,7 +140,7 @@
 		});
 
 
-		var basemap_layer = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+		basemap_layer = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
 			attribution: '<a href="https://google.com/maps" target="_">Google Maps</a>;',
 			subdomains:['mt0','mt1','mt2','mt3']
 		}).addTo(map);
@@ -170,20 +160,20 @@
 		$("#color-picker-wrapper-flood").css("background-color", $("#color-picker-flood").val());
 
 		$('input[type=radio][name=basemap_selection]').change(function(){
-			var selected_basemap = $(this).val()
+			var selected_basemap = $(this).val();
 			if(selected_basemap === "street"){
-				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}')
+				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}');
 			}else if(selected_basemap === "satellite"){
-				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}')
+				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}');
 			}else if(selected_basemap === "terrain"){
-				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}')
+				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}');
 			}
-		})
+		});
 
 		$(".legend-info-button").click(function () {
 			$(".legend-tabs").toggle();
 			$("#legend-content").toggle();
-			if ($("#legend-content").is(":visible") == true) {
+			if ($("#legend-content").is(":visible") === true) {
 				$("#legend-collapse").css("display","inline-block");
 				$("#legend-expand").css("display","none");
 			}
@@ -214,7 +204,7 @@
 
 		$(".event-info-button").click(function () {
 			$("#event-content").toggle();
-			if ($("#event-content").is(":visible") == true) {
+			if ($("#event-content").is(":visible") === true) {
 				$("#event-collapse").css("display","inline-block");
 				$("#event-expand").css("display","none");
 			}
@@ -240,18 +230,18 @@
 
 		$("#toggle_switch_historic").on("change",function(){
 			if(this.checked){
-				historical_layer.setOpacity(1)
+				historical_layer.setOpacity(1);
 			}
 			else{
-				historical_layer.setOpacity(0)
+				historical_layer.setOpacity(0);
 			}
 		});
 		$("#toggle_switch_daily").on("change",function(){
 			if(this.checked){
-				flood_layer.setOpacity(1)
+				flood_layer.setOpacity(1);
 			}
 			else{
-				flood_layer.setOpacity(0)
+				flood_layer.setOpacity(0);
 			}
 		});
 
@@ -266,14 +256,7 @@
 			MapService.getMap(parameters)
 			.then(function (data) {
 				flood_layer = addMapLayer(flood_layer, data);
-				//var mapType = MapService.getMapType(data.eeMapId, data.eeMapToken, type);
-				//loadMap(type, mapType);
-				// $timeout(function () {
-				// 	showInfoAlert('The map data shows the river change data for ' + $scope.year);
-				// }, 1000);
 			}, function (error) {
-				// $scope.showLoader = false;
-				// showErrorAlert(error.error);
 				console.log(error);
 			});
 		};
@@ -291,19 +274,7 @@
 			MapService.getPermanentWater(parameters)
 			.then(function (data) {
 				historical_layer = addMapLayer(historical_layer, data);
-				// L.tileLayer(data,{attribution:
-				// '<a href="https://earthengine.google.com" target="_">' +
-				// 'Google Earth Engine</a>;'}).addTo(map);
-
-				//var mapType = MapService.getMapType(data.eeMapId, data.eeMapToken, type);
-				//loadMap(type, mapType);
-				// $timeout(function () {
-				// 	showInfoAlert('The map data shows the river change data for ' + $scope.year);
-				// }, 1000);
-				//$scope.showLegend = true;
 			}, function (error) {
-				// $scope.showLoader = false;
-				// showErrorAlert(error.error);
 				console.log(error);
 			});
 		};
@@ -358,7 +329,7 @@
 							//MapService.addGeoJson(map, addedGeoJson);
 							// Convert to Polygon
 							var polygonArray = [];
-							var shape = {}
+							var shape = {};
 							var _coord = geometry.coordinates[0];
 
 							for (var i = 0; i < _coord.length; i++) {
@@ -407,7 +378,7 @@
 			var wcolor = $('#color-picker-water').val();
 			var geom = JSON.stringify(drawing_polygon);
 
-			if (startMonth == endMonth) { endMonth += 1 }
+			if (startMonth === endMonth) { endMonth += 1; }
 
 			var parameters = {
 				startYear: startYear,
@@ -420,7 +391,7 @@
 			};
 			MapService.getPermanentWater(parameters)
 			.then(function (data) {
-				historical_layer.setUrl(data)
+				historical_layer.setUrl(data);
 			}, function (error) {
 				console.log(error);
 			});
@@ -439,7 +410,7 @@
 			};
 			MapService.getMap(parameters)
 			.then(function (data) {
-				flood_layer.setUrl(data)
+				flood_layer.setUrl(data);
 				console.log(data);
 			}, function (error) {
 				console.log(error);
@@ -455,7 +426,7 @@
 			layer = L.tileLayer(url,{attribution:
 				'<a href="https://earthengine.google.com" target="_">' +
 				'Google Earth Engine</a>;'}).addTo(map);
-				return layer
+				return layer;
 			}
 
 		});

@@ -40,19 +40,9 @@
 		var floodSlider = $('#flood-opacity').slider();
 		var floodSlider1 = $('#flood1-opacity').slider();
 
-
-		// check if this init is a load from the use case redirects
-		// only need to change map center for one use case (only works on production server)
-		if (window.location.href == 'http://tethys-servir.adpc.net/apps/hydraviewer/mapviewer/?sDate=2016-07-14&sensor_txt=sentinel1')  {
-			var centerPt = [21,94]
-		}
-		else{
-			centerPt = [16.8,95.7]
-		}
-
 		// init map
 		map = L.map('map',{
-			center: centerPt,
+			center: [16.8,95.7],
 			zoom: 8,
 			minZoom:2,
 			maxZoom: 16,
@@ -150,16 +140,16 @@
 		});
 
 
-		var basemap_layer = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+		basemap_layer = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
 			attribution: '<a href="https://google.com/maps" target="_">Google Maps</a>;',
 			subdomains:['mt0','mt1','mt2','mt3']
 		}).addTo(map);
 
 		selected_date = $('#date_selection').val();
-		var viirs_product = "VIIRS_SNPP_CorrectedReflectance_BandsM11-I2-I1"
-		browse_layer = addGibsLayer(browse_layer,viirs_product,selected_date)
-		browse_layer.setOpacity(0)
-		browseSlider.slider('disable')
+		var viirs_product = "VIIRS_SNPP_CorrectedReflectance_BandsM11-I2-I1";
+		browse_layer = addGibsLayer(browse_layer,viirs_product,selected_date);
+		browse_layer.setOpacity(0);
+		browseSlider.slider('disable');
 
 		$('#color-picker-water').on('change', function() {
 			$("#color-picker-wrapper-water").css("background-color", $(this).val());
@@ -175,20 +165,20 @@
 		$("#color-picker-wrapper-flood").css("background-color", $("#color-picker-flood").val());
 
 		$('input[type=radio][name=basemap_selection]').change(function(){
-			var selected_basemap = $(this).val()
+			var selected_basemap = $(this).val();
 			if(selected_basemap === "street"){
-				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}')
+				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}');
 			}else if(selected_basemap === "satellite"){
-				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}')
+				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}');
 			}else if(selected_basemap === "terrain"){
-				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}')
+				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}');
 			}
-		})
+		});
 
 		$(".legend-info-button").click(function () {
 			$(".legend-tabs").toggle();
 			$("#legend-content").toggle();
-			if ($("#legend-content").is(":visible") == true) {
+			if ($("#legend-content").is(":visible") === true) {
 				$("#legend-collapse").css("display","inline-block");
 				$("#legend-expand").css("display","none");
 			}
@@ -199,7 +189,6 @@
 		});
 
 		var customControl = L.Control.extend({
-
 			options: {
 				position: 'topleft'
 			},
@@ -212,7 +201,6 @@
 				container.style.backgroundSize = "30px 30px";
 				return container;
 			}
-
 		});
 		map.addControl(new customControl());
 
@@ -243,16 +231,16 @@
 			updateFloodMapLayer();
 			updatePrecipitationData();
 			var prod = $('#browse_selection').val();
-			var id = prod.split('|')[1]
+			var id = prod.split('|')[1];
 			var template =
 			'//gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/' +
-			id + '/default/' + selected_date + '/{tileMatrixSet}/{z}/{y}/{x}.jpg'
-			browse_layer.setUrl(template)
+			id + '/default/' + selected_date + '/{tileMatrixSet}/{z}/{y}/{x}.jpg';
+			browse_layer.setUrl(template);
 		});
 
 		$(".event-info-button").click(function () {
 			$("#event-content").toggle();
-			if ($("#event-content").is(":visible") == true) {
+			if ($("#event-content").is(":visible") === true) {
 				$("#event-collapse").css("display","inline-block");
 				$("#event-expand").css("display","none");
 			}
@@ -277,108 +265,108 @@
 		$("#tab-water").click();
 
 		$('#precip-opacity').change(function(){
-			var opac = parseFloat($('input[id="precip-opacity"]').slider('getValue'))
-			precip_layer.setOpacity(opac)
+			var opac = parseFloat($('input[id="precip-opacity"]').slider('getValue'));
+			precip_layer.setOpacity(opac);
 		});
 
 		$('#historical-opacity').change(function(){
-			var opac = parseFloat($('input[id="historical-opacity"]').slider('getValue'))
-			historical_layer.setOpacity(opac)
+			var opac = parseFloat($('input[id="historical-opacity"]').slider('getValue'));
+			historical_layer.setOpacity(opac);
 		});
 
 		$('#flood1-opacity').change(function(){
-			var opac = parseFloat($('input[id="flood1-opacity"]').slider('getValue'))
-			flood_layer.setOpacity(opac)
+			var opac = parseFloat($('input[id="flood1-opacity"]').slider('getValue'));
+			flood_layer.setOpacity(opac);
 		});
 
 		$("#browse-check").on("click",function(){
 			if(this.checked){
-				browseSlider.slider('enable')
-				var opac = parseFloat($('input[id="browse-opacity"]').slider('getValue'))
-				browse_layer.setOpacity(opac)
+				browseSlider.slider('enable');
+				var opac = parseFloat($('input[id="browse-opacity"]').slider('getValue'));
+				browse_layer.setOpacity(opac);
 			}
 			else{
-				browseSlider.slider('disable')
-				browse_layer.setOpacity(0)
+				browseSlider.slider('disable');
+				browse_layer.setOpacity(0);
 			}
 		});
 
 		$("#precip-check").on("click",function(){
 			if(this.checked){
-				precipSlider.slider('enable')
-				var opac = parseFloat($('input[id="precip-opacity"]').slider('getValue'))
-				precip_layer.setOpacity(opac)
+				precipSlider.slider('enable');
+				var opac = parseFloat($('input[id="precip-opacity"]').slider('getValue'));
+				precip_layer.setOpacity(opac);
 			}
 			else{
-				precipSlider.slider('disable')
-				precip_layer.setOpacity(0)
+				precipSlider.slider('disable');
+				precip_layer.setOpacity(0);
 			}
 		});
 		$("#historical-check").on("click",function(){
 			if(this.checked){
-				historicalSlider.slider('enable')
-				var opac = parseFloat($('input[id="historical-opacity"]').slider('getValue'))
-				historical_layer.setOpacity(opac)
+				historicalSlider.slider('enable');
+				var opac = parseFloat($('input[id="historical-opacity"]').slider('getValue'));
+				historical_layer.setOpacity(opac);
 				$("#toggle_switch_historic").prop('checked',true).change();
 			}
 			else{
-				historicalSlider.slider('disable')
-				historical_layer.setOpacity(0)
+				historicalSlider.slider('disable');
+				historical_layer.setOpacity(0);
 				$("#toggle_switch_historic").prop('checked',false).change();
 			}
 		});
 		$("#toggle_switch_historic").on("change",function(){
 			if(this.checked){
-				historicalSlider.slider('enable')
-				var opac = parseFloat($('input[id="historical-opacity"]').slider('getValue'))
-				historical_layer.setOpacity(opac)
+				historicalSlider.slider('enable');
+				var opac = parseFloat($('input[id="historical-opacity"]').slider('getValue'));
+				historical_layer.setOpacity(opac);
 				$("#historical-check").prop('checked',true);
 			}
 			else{
-				historicalSlider.slider('disable')
-				historical_layer.setOpacity(0)
+				historicalSlider.slider('disable');
+				historical_layer.setOpacity(0);
 				$("#historical-check").prop('checked',false);
 			}
 		});
 		$("#toggle_switch_daily").on("change",function(){
 			if(this.checked){
-				floodSlider1.slider('enable')
-				var opac = parseFloat($('input[id="flood1-opacity"]').slider('getValue'))
-				flood_layer.setOpacity(opac)
+				floodSlider1.slider('enable');
+				var opac = parseFloat($('input[id="flood1-opacity"]').slider('getValue'));
+				flood_layer.setOpacity(opac);
 				$("#flood-check").prop('checked',true);
 			}
 			else{
-				floodSlider1.slider('disable')
-				flood_layer.setOpacity(0)
+				floodSlider1.slider('disable');
+				flood_layer.setOpacity(0);
 				$("#flood-check").prop('checked',false);
 			}
 		});
 		$("#flood-check").on("click",function(){
 			if(this.checked){
-				floodSlider1.slider('enable')
-				var opac = parseFloat($('input[id="flood1-opacity"]').slider('getValue'))
-				flood_layer.setOpacity(opac)
+				floodSlider1.slider('enable');
+				var opac = parseFloat($('input[id="flood1-opacity"]').slider('getValue'));
+				flood_layer.setOpacity(opac);
 				$("#toggle_switch_daily").prop('checked',true).change();
 			}
 			else{
-				floodSlider1.slider('disable')
-				flood_layer.setOpacity(0)
+				floodSlider1.slider('disable');
+				flood_layer.setOpacity(0);
 				$("#toggle_switch_daily").prop('checked',false).change();
 			}
 		});
 
 		$('#browse_selection').change(function(){
 			var prod = $('#browse_selection').val();
-			var id = prod.split('|')[1]
+			var id = prod.split('|')[1];
 			var template =
 			'//gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/' +
-			id + '/default/' + selected_date + '/{tileMatrixSet}/{z}/{y}/{x}.jpg'
-			browse_layer.setUrl(template)
+			id + '/default/' + selected_date + '/{tileMatrixSet}/{z}/{y}/{x}.jpg';
+			browse_layer.setUrl(template);
 		});
 
 		$('#browse-opacity').change(function(){
-			var opac = parseFloat($('input[id="browse-opacity"]').slider('getValue'))
-			browse_layer.setOpacity(opac)
+			var opac = parseFloat($('input[id="browse-opacity"]').slider('getValue'));
+			browse_layer.setOpacity(opac);
 		});
 
 		$("#update-button").on("click",function(){
@@ -436,8 +424,8 @@
 
 		$scope.getPrecipMap = function () {
 			var prod = $('#product_selection').val();
-			var cmap = $('#cmap_selection').val()
-			var accum = prod.split('|')[0]
+			var cmap = $('#cmap_selection').val();
+			var accum = prod.split('|')[0];
 			var selected_date = $('#date_selection').val();
 
 			var parameters = {
@@ -448,8 +436,8 @@
 			MapService.getPrecipitationData(parameters)
 			.then(function (data) {
 				precip_layer = addMapLayer(precip_layer, data);
-				precip_layer.setOpacity(0)
-				precipSlider.slider('disable')
+				precip_layer.setOpacity(0);
+				precipSlider.slider('disable');
 			}, function (error) {
 				console.log(error);
 			});
@@ -504,7 +492,7 @@
 							//MapService.addGeoJson(map, addedGeoJson);
 							// Convert to Polygon
 							var polygonArray = [];
-							var shape = {}
+							var shape = {};
 							var _coord = geometry.coordinates[0];
 
 							for (var i = 0; i < _coord.length; i++) {
@@ -554,7 +542,7 @@
 			layer = L.tileLayer(url,{attribution:
 				'<a href="https://earthengine.google.com" target="_">' +
 				'Google Earth Engine</a>;'}).addTo(map);
-				return layer
+				return layer;
 			}
 
 			function updatePermanentWater(){
@@ -570,7 +558,7 @@
 				var wcolor = $('#color-picker-water').val();
 				var geom = JSON.stringify(drawing_polygon);
 
-				if (startMonth == endMonth) { endMonth += 1 }
+				if (startMonth === endMonth) { endMonth += 1; }
 
 				var parameters = {
 					startYear: startYear,
@@ -584,7 +572,7 @@
 				MapService.getPermanentWater(parameters)
 				.then(function (data) {
 					$scope.showLoader = false;
-					historical_layer.setUrl(data)
+					historical_layer.setUrl(data);
 				}, function (error) {
 					$scope.showLoader = false;
 					console.log(error);
@@ -606,7 +594,7 @@
 				MapService.getMap(parameters)
 				.then(function (data) {
 					$scope.showLoader = false;
-					flood_layer.setUrl(data)
+					flood_layer.setUrl(data);
 				}, function (error) {
 					$scope.showLoader = false;
 					console.log(error);
@@ -616,8 +604,8 @@
 			function updatePrecipitationData(){
 				$scope.showLoader = true;
 				var prod = $('#product_selection').val();
-				var cmap = $('#cmap_selection').val()
-				var accum = prod.split('|')[0]
+				var cmap = $('#cmap_selection').val();
+				var accum = prod.split('|')[0];
 				var selected_date = $('#date_selection').val();
 
 				var parameters = {
@@ -628,7 +616,7 @@
 				MapService.getPrecipitationData(parameters)
 				.then(function (data) {
 					$scope.showLoader = false;
-					precip_layer.setUrl(data)
+					precip_layer.setUrl(data);
 				}, function (error) {
 					$scope.showLoader = false;
 					console.log(error);
@@ -664,7 +652,7 @@
 
 				map.addLayer(layer);
 
-				return layer
+				return layer;
 			}
 		});
 

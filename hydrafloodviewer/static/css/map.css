@@ -58,7 +58,7 @@ input:checked + .toggle-slider:before {
 }
 
 .toggle-legend .form-group {
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 .color-picker-wrapper {
@@ -78,7 +78,7 @@ input[type="color"]::-webkit-color-swatch-wrapper {
 }
 input[type="color"]::-webkit-color-swatch {
 	border: none; /*change color of the swatch border here*/
-	border-radius: 0px;
+	border-radius: 0;
 }
 
 .toggle-nav{
