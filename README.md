@@ -1,4 +1,4 @@
-## The steps are meant to turn a generic Ubuntu box into an Django server hosting the floodtool with PostgreSQL, Nginx, Gunicorn, Virtualenv and supervisor
+## The steps are meant to turn a generic Ubuntu box into an Django server hosting the Hydrafloods viewer with PostgreSQL, Nginx, Gunicorn, Virtualenv and supervisor
 
 The HYDRAFloods Viewer is a web application used to view flood map results from the [HYDRAFloods](https://github.com/servir-mekong/hydra-floods) processing package along with additional hydrologic variables.
 
