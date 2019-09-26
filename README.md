@@ -98,7 +98,7 @@ sudo apt-get clean
 
 ### Download the hydrafloodviewer from git
 ```sh
-env GIT_SSL_NO_VERIFY=true git clone https://github.com/Servir-Mekong/JRCFloodToolDjango.git hydrafloodviewer
+env GIT_SSL_NO_VERIFY=true git clone https://github.com/Servir-Mekong/hydrafloodviewer.git hydrafloodviewer
 cd hydrafloodviewer/
 ```
 
