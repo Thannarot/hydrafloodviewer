@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 	angular.module('baseApp')
-	.controller('hydrafloodviewer' ,function ($scope, $timeout, MapService, appSettings, $tooltip, $modal, $alert, ngDialog,FileSaver, Blob, usSpinnerService) {
+	.controller('hydrafloodviewer' ,function ($scope, $timeout, MapService) {
 
 		/* global variables to be tossed around like hot potatoes */
 		$scope.initdate = '';
@@ -17,9 +17,6 @@
 		flood_layer,
 		drawing_polygon,
 		$layers_element;
-		//sentinel1_layer = addMapLayer(sentinel1_layer,$layers_element.attr('data-sentinel1-url'))
-
-
 
 		$('.js-range-slider').ionRangeSlider({
 			skin: "round",
@@ -70,6 +67,7 @@
 		});
 
 		var control = new L.Control.Custom().addTo(map);
+
 		// Initialise the FeatureGroup to store editable layers
 		var editableLayers = new L.FeatureGroup();
 		map.addLayer(editableLayers);
@@ -98,7 +96,6 @@
 				edit: true
 			}
 		};
-
 
 		// Initialise the draw control and pass it the FeatureGroup of editable layers
 		var drawControl = new L.Control.Draw(drawPluginOptions);
@@ -143,43 +140,9 @@
 		browse_layer.setOpacity(0);
 		browseSlider.slider('disable');
 
-		$('#color-picker-water').on('change', function() {
-			$("#color-picker-wrapper-water").css("background-color", $(this).val());
-			updatePermanentWater();
-		});
-		$("#color-picker-wrapper-water").css("background-color", $("#color-picker-water").val());
-
-
-		$('#color-picker-flood').on('change', function() {
-			$("#color-picker-wrapper-flood").css("background-color", $(this).val());
-			updateFloodMapLayer();
-		});
-		$("#color-picker-wrapper-flood").css("background-color", $("#color-picker-flood").val());
-
-		$('input[type=radio][name=basemap_selection]').change(function(){
-			var selected_basemap = $(this).val();
-			if(selected_basemap === "street"){
-				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}');
-			}else if(selected_basemap === "satellite"){
-				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}');
-			}else if(selected_basemap === "terrain"){
-				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}');
-			}
-		});
-
-		$(".legend-info-button").click(function () {
-			$(".legend-tabs").toggle();
-			$("#legend-content").toggle();
-			if ($("#legend-content").is(":visible") === true) {
-				$("#legend-collapse").css("display","inline-block");
-				$("#legend-expand").css("display","none");
-			}
-			else {
-				$("#legend-collapse").css("display","none");
-				$("#legend-expand").css("display","inline-block");
-			}
-		});
-
+		/**
+		* Add file upload button on map
+		*/
 		var customControl = L.Control.extend({
 			options: {
 				position: 'topleft'
@@ -219,29 +182,53 @@
 			$('.custom-alert').removeClass('display-none').removeClass('alert-success').removeClass('alert-danger').addClass('alert-info');
 		};
 
-		$('#date_selection').change(function(){
+		/**
+		* Change permanent water color
+		*/
+		$('#color-picker-water').on('change', function() {
+			$("#color-picker-wrapper-water").css("background-color", $(this).val());
+			updatePermanentWater();
+		});
+		$("#color-picker-wrapper-water").css("background-color", $("#color-picker-water").val());
+
+		/**
+		* Change flood color
+		*/
+		$('#color-picker-flood').on('change', function() {
+			$("#color-picker-wrapper-flood").css("background-color", $(this).val());
 			updateFloodMapLayer();
-			updatePrecipitationData();
-			var prod = $('#browse_selection').val();
-			var id = prod.split('|')[1];
-			var template =
-			'//gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/' +
-			id + '/default/' + selected_date + '/{tileMatrixSet}/{z}/{y}/{x}.jpg';
-			browse_layer.setUrl(template);
+		});
+		$("#color-picker-wrapper-flood").css("background-color", $("#color-picker-flood").val());
+
+		/**
+		* Change basemap layer(satellite, terrain, street)
+		*/
+		$('input[type=radio][name=basemap_selection]').change(function(){
+			var selected_basemap = $(this).val();
+			if(selected_basemap === "street"){
+				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}');
+			}else if(selected_basemap === "satellite"){
+				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}');
+			}else if(selected_basemap === "terrain"){
+				basemap_layer.setUrl('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}');
+			}
 		});
 
-		$(".event-info-button").click(function () {
-			$("#event-content").toggle();
-			if ($("#event-content").is(":visible") === true) {
-				$("#event-collapse").css("display","inline-block");
-				$("#event-expand").css("display","none");
+		/**
+		* legend controller
+		*/
+		$(".legend-info-button").click(function () {
+			$(".legend-tabs").toggle();
+			$("#legend-content").toggle();
+			if ($("#legend-content").is(":visible") === true) {
+				$("#legend-collapse").css("display","inline-block");
+				$("#legend-expand").css("display","none");
 			}
 			else {
-				$("#event-collapse").css("display","none");
-				$("#event-expand").css("display","inline-block");
+				$("#legend-collapse").css("display","none");
+				$("#legend-expand").css("display","inline-block");
 			}
 		});
-
 		$("#tab-water").click(function () {
 			$("#legend-tab-water").css("display", "block");
 			$("#legend-tab-precip").css("display", "none");
@@ -256,6 +243,38 @@
 		});
 		$("#tab-water").click();
 
+		/**
+		* Update layers when date selection is changed
+		*/
+		$('#date_selection').change(function(){
+			updateFloodMapLayer();
+			updatePrecipitationData();
+			var prod = $('#browse_selection').val();
+			var id = prod.split('|')[1];
+			var template =
+			'//gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/' +
+			id + '/default/' + selected_date + '/{tileMatrixSet}/{z}/{y}/{x}.jpg';
+			browse_layer.setUrl(template);
+		});
+
+		/**
+		* Usecase messagebox toggle
+		*/
+		$(".event-info-button").click(function () {
+			$("#event-content").toggle();
+			if ($("#event-content").is(":visible") === true) {
+				$("#event-collapse").css("display","inline-block");
+				$("#event-expand").css("display","none");
+			}
+			else {
+				$("#event-collapse").css("display","none");
+				$("#event-expand").css("display","inline-block");
+			}
+		});
+
+		/**
+		* Layer opacity
+		*/
 		$('#precip-opacity').change(function(){
 			var opac = parseFloat($('input[id="precip-opacity"]').slider('getValue'));
 			precip_layer.setOpacity(opac);
@@ -271,6 +290,9 @@
 			flood_layer.setOpacity(opac);
 		});
 
+		/**
+		* Browse Imagery toggle
+		*/
 		$("#browse-check").on("click",function(){
 			if(this.checked){
 				browseSlider.slider('enable');
@@ -283,6 +305,9 @@
 			}
 		});
 
+		/**
+		* Precipiatation Data toggle
+		*/
 		$("#precip-check").on("click",function(){
 			if(this.checked){
 				precipSlider.slider('enable');
@@ -294,6 +319,10 @@
 				precip_layer.setOpacity(0);
 			}
 		});
+
+		/**
+		* Permanent water map toggle
+		*/
 		$("#historical-check").on("click",function(){
 			if(this.checked){
 				historicalSlider.slider('enable');
@@ -307,32 +336,10 @@
 				$("#toggle_switch_historic").prop('checked',false).change();
 			}
 		});
-		$("#toggle_switch_historic").on("change",function(){
-			if(this.checked){
-				historicalSlider.slider('enable');
-				var opac = parseFloat($('input[id="historical-opacity"]').slider('getValue'));
-				historical_layer.setOpacity(opac);
-				$("#historical-check").prop('checked',true);
-			}
-			else{
-				historicalSlider.slider('disable');
-				historical_layer.setOpacity(0);
-				$("#historical-check").prop('checked',false);
-			}
-		});
-		$("#toggle_switch_daily").on("change",function(){
-			if(this.checked){
-				floodSlider1.slider('enable');
-				var opac = parseFloat($('input[id="flood1-opacity"]').slider('getValue'));
-				flood_layer.setOpacity(opac);
-				$("#flood-check").prop('checked',true);
-			}
-			else{
-				floodSlider1.slider('disable');
-				flood_layer.setOpacity(0);
-				$("#flood-check").prop('checked',false);
-			}
-		});
+
+		/**
+		* Flood map toggle
+		*/
 		$("#flood-check").on("click",function(){
 			if(this.checked){
 				floodSlider1.slider('enable');
@@ -347,6 +354,43 @@
 			}
 		});
 
+		/**
+		* Permanent water map toggle in legend box
+		*/
+		$("#toggle_switch_historic").on("change",function(){
+			if(this.checked){
+				historicalSlider.slider('enable');
+				var opac = parseFloat($('input[id="historical-opacity"]').slider('getValue'));
+				historical_layer.setOpacity(opac);
+				$("#historical-check").prop('checked',true);
+			}
+			else{
+				historicalSlider.slider('disable');
+				historical_layer.setOpacity(0);
+				$("#historical-check").prop('checked',false);
+			}
+		});
+
+		/**
+		* Flood map toggle in legend box
+		*/
+		$("#toggle_switch_daily").on("change",function(){
+			if(this.checked){
+				floodSlider1.slider('enable');
+				var opac = parseFloat($('input[id="flood1-opacity"]').slider('getValue'));
+				flood_layer.setOpacity(opac);
+				$("#flood-check").prop('checked',true);
+			}
+			else{
+				floodSlider1.slider('disable');
+				flood_layer.setOpacity(0);
+				$("#flood-check").prop('checked',false);
+			}
+		});
+
+		/**
+		* Change NRT Browse Imagery
+		*/
 		$('#browse_selection').change(function(){
 			var prod = $('#browse_selection').val();
 			var id = prod.split('|')[1];
@@ -356,22 +400,31 @@
 			browse_layer.setUrl(template);
 		});
 
+		/**
+		* Change NRT Browse Imagery opacity
+		*/
 		$('#browse-opacity').change(function(){
 			var opac = parseFloat($('input[id="browse-opacity"]').slider('getValue'));
 			browse_layer.setOpacity(opac);
 		});
 
+		/**
+		* Update permanent water map
+		*/
 		$("#update-button").on("click",function(){
 			updatePermanentWater();
 		});
 
+		/**
+		* Update precipitation map
+		*/
 		$('#cmap_selection').change(function(){
 			updatePrecipitationData();
 		});
-
 		$('#product_selection').change(function(){
 			updatePrecipitationData();
 		});
+
 
 		$scope.initMap = function (date, fcolor, sensor) {
 			$scope.showLoader = true;
@@ -387,7 +440,6 @@
 
 			}, function (error) {
 				$scope.showLoader = false;
-				// showErrorAlert(error.error);
 				console.log(error);
 			});
 		};
@@ -406,10 +458,8 @@
 			.then(function (data) {
 				$scope.showLoader = false;
 				historical_layer = addMapLayer(historical_layer, data);
-
 			}, function (error) {
 				$scope.showLoader = false;
-				// showErrorAlert(error.error);
 				console.log(error);
 			});
 		};
@@ -419,7 +469,6 @@
 			var cmap = $('#cmap_selection').val();
 			var accum = prod.split('|')[0];
 			var selected_date = $('#date_selection').val();
-
 			var parameters = {
 				date: selected_date,
 				cmap: cmap,
@@ -435,12 +484,10 @@
 			});
 		};
 
-
 		/**
 		* Upload Area Button
 		**/
 		var readFile = function (e) {
-
 			var files = e.target.files;
 			if (files.length > 1) {
 				console.log('upload one file at a time');
@@ -512,7 +559,6 @@
 							map.fitBounds(layer.getBounds());
 							editableLayers.addLayer(layer);
 
-
 						} else {
 							alert('multigeometry and multipolygon not supported yet!');
 						}
@@ -523,18 +569,16 @@
 			}
 		};
 
-
 		$('#input-file2').change(function (event) {
 			readFile(event);
 		});
-
-
-		// function to add and update tile layer to map
-		function addMapLayer(layer,url){
-			layer = L.tileLayer(url,{attribution:
-				'<a href="https://earthengine.google.com" target="_">' +
-				'Google Earth Engine</a>;'}).addTo(map);
-				return layer;
+		
+			// function to add and update tile layer to map
+			function addMapLayer(layer,url){
+				layer = L.tileLayer(url,{attribution:
+					'<a href="https://earthengine.google.com" target="_">' +
+					'Google Earth Engine</a>;'}).addTo(map);
+					return layer;
 			}
 
 			function updatePermanentWater(){

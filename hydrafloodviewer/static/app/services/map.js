@@ -6,7 +6,6 @@
 	.service('MapService', function ($http, $q) {
 		var service = this;
 
-
 		service.getMapType = function (mapId, mapToken, type) {
 			var eeMapOptions = {
 				getTileUrl: function (tile, zoom) {
@@ -126,70 +125,6 @@
 			};
 
 			return drawingManagerOptions;
-		};
-
-		service.buildChart = function (data, div, title) {
-			// build the chart
-			Highcharts.chart(div, {
-				chart: {
-					plotBackgroundColor: null,
-					plotBorderWidth: null,
-					plotShadow: false,
-					type: 'pie',
-					style: {
-						fontFamily: 'Arial'
-					}
-				},
-				title: {
-					text: title,
-					style: {
-						fontSize: '14px'
-					}
-				},
-				tooltip: {
-					pointFormat: '{series.name}: <b>{point.percentage:.2f}% <br>value: {point.y}</b>'
-				},
-				plotOptions: {
-					pie: {
-						allowPointSelect: true,
-						cursor: 'pointer',
-						dataLabels: {
-							enabled: true,
-							format: '{point.percentage:.2f} %<br>value: {point.y}',
-						},
-						showInLegend: true
-					}
-				},
-				series: [
-					{
-						name: 'Area',
-						coloyByPoint: true,
-						data: data
-					}
-				],
-				credits: {
-					enabled: false
-				},
-				exporting: {
-					buttons: {
-						contextButton: {
-							menuItems: [
-								"printChart",
-								"separator",
-								"downloadPNG",
-								"downloadJPEG",
-								"downloadPDF",
-								"downloadSVG",
-								"separator",
-								"downloadCSV",
-								"downloadXLS",
-								//"viewData",
-								//"openInCloud"
-							]
-						}
-					}
-				}
-			});
 		};
 
 	});
